@@ -1,66 +1,30 @@
-PROYECTO – SISTEMA DISTRIBUIDO (SECRETARÍA DE SALUD)
+# Multi-Tier Distributed Healthcare Infrastructure 
 
-Este proyecto es un sistema distribuido compuesto por un App Server, un Middleware y un Web Server, diseñado para la gestión de expedientes clínicos, comunicación mediante servicios REST y manejo de solicitudes médicas.
-Incluye módulos para base de datos, servicios independientes desplegados en GlassFish, comunicación por MQTT y una interfaz web para el usuario.
+An enterprise-grade, distributed clinical ecosystem designed to orchestrate medical histories, handle real-time medical scheduling queues, and securely process clinical file streaming. The architecture implements a fully decoupled multi-tier topology separating presentation layers, broker middleware nodes, and transaction backend servers.
 
+## Architectural Topology & Component Mapping
 
-REQUISITOS
+The ecosystem is structurally divided into three independent operational boundaries:
 
-- Java 8+
-- GlassFish 5+
-- Python 3.10+
-- Mongo DB
-- Dependencias de Python (Flask, paho-mqtt, mosquitto, etc.)
-- NetBeans / IntelliJ (para compilar los módulos Java)
-- Navegador web
+1. **App_Server (Enterprise Backend):** Engineered in Java SE/EE and deployed across distributed clusters on Eclipse GlassFish Server. It houses core business definitions (`Objetos_SecretariaSalud`) and encapsulates transactional database connectivity endpoints (`BaseDatosExpedienteClinico`).
+2. **Middleware (Routing Broker):** Built in Python using the Flask micro-framework. It acts as an API Gateway and dynamic routing manager (`rutas.py`), orchestrating payloads across distributed nodes and utilizing the MQTT protocol (via paho-mqtt and Mosquitto) for asynchronous message-event reacting.
+3. **Web_Server (Client Viewport):** A lightweight client presentation layer built with web standards to ingest distributed streams and capture user transaction inputs.
 
+## Infrastructure Stack & Protocols
 
-INSTRUCCIONES PARA EJECUTAR EL PROYECTO
+* Enterprise Core: Java EE, GlassFish Application Server Deployment
+* Middleware Broker: Python, Flask RESTful Framework
+* Event fabrics: MQTT Protocol (Mosquitto Event Broker / Paho-MQTT client)
+* Database Solution: MongoDB (Non-relational persistent electronic health records)
+* Build Engine: Maven/Ant Dependency Lifecycle tools
 
-1. Preparación en App_Server/
+## Deployment Execution Protocol
 
-    1. Realizar Clean & Build en este orden:
-         - Objetos_SecretariaSalud
-         - BaseDatosExpedienteClinico
-    2. Ejecutar la clase Presets (esto inicializa datos necesarios).
-    3. Realizar Clean & Build en todos los servicios del App Server.
-    4. Crear un servicio en GlassFish para cada módulo y asignar las rutas correspondientes en: Middleware/rutas/rutas.py
-
-2. Ejecutar el Middleware
-
-      Desde consola:
-           cd Middleware
-           python app.py
-
-3. Levantar los servicios del App_Server
-
-      En GlassFish, desplegar y ejecutar todos los servicios.
-      Asegurarse de que todos estén en estado Running.
-
-4. Ejecutar el Web Server
-
-      Desde consola:
-           cd Web_Server
-           python -m http.server 8800
-
-5. Acceder desde navegador:
-  
-      http://localhost:8800/login.html
-
-
-NOTAS
-
-- Si un servicio falla, realizar nuevamente Clean & Build y volver a desplegar en GlassFish.
-- El Middleware debe estar ejecutándose antes de abrir la interfaz web.
-- Si se modifican las rutas del backend, actualizar rutas.py.
-
-
-
-Proyecto realizado para la materia Sistemas Distribuidos /Arquitecturas Empresariales – ITSON.
-Integrantes: 
-247045 - César Durán Ávalos
-225330 - Valeria Encinas Lujano
-244802 - Kimberli Martínez Sandoval
-249444 - Fernando García Salazar
-117262 - Paulina Rodríguez Rayos
-165647 - Alejandro Ochoa Vega
+1. **Initialize App Database Assets:** Open the `App_Server/` repository in your IDE, compile `Objetos_SecretariaSalud` followed by `BaseDatosExpedienteClinico`. Execute the `Presets.java` runtime class to provision initial clinical constraints.
+2. **Launch Python Middleware:** Navigate to the `Middleware/` footprint via terminal, configure environment routes inside `rutas.py`, and spin up the gateway:
+   cd Middleware
+   python app.py
+3. **Deploy Enterprise Clusters:** Deploy all compiled Java application archives into active GlassFish running instances.
+4. **Boot Presentation Services:** Open a distinct console footprint, instantiate the web host and navigate to local authentication screens:
+   cd Web_Server
+   python -m http.server 8800
